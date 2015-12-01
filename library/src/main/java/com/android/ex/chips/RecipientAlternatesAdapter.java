@@ -431,7 +431,9 @@ public class RecipientAlternatesAdapter extends CursorAdapter {
         }
 
         final Cursor resultCursor = removeUndesiredDestinations(cursor, desiredMimeType, lookupKey);
-        cursor.close();
+        if (cursor != null) {
+            cursor.close();
+        }
 
         return resultCursor;
     }
@@ -455,6 +457,10 @@ public class RecipientAlternatesAdapter extends CursorAdapter {
     // Visible for testing
     static Cursor removeUndesiredDestinations(final Cursor original, final String desiredMimeType,
             final String lookupKey) {
+        if (original == null) {
+            return new MatrixCursor(Queries.PHONE.getProjection());
+        }
+
         final MatrixCursor result = new MatrixCursor(
                 original.getColumnNames(), original.getCount());
         final HashSet<String> destinationsSeen = new HashSet<String>();
